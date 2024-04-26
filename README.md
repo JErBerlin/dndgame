@@ -4,25 +4,28 @@
 
 ### Some Background History
 
-Role-playing games (RPGs) immerse players in fictional settings where they assume the roles of characters and navigate adventures controlled by a game master. Originating in the 1970s with games like Dungeons & Dragons, RPGs have evolved from table-top formats to include online and app-supported versions. Dungeons & Dragons, in particular, has been pivotal in shaping the genre with its complex storylines and character development mechanics, influencing countless other games.
+Role-playing games, like Dungeons & Dragons, began in the 1970s. These games involve players taking on the roles of characters in a fictional setting, guided by a game master. These games have expanded from playing at a table with paper and pens to include versions that use digital technology and apps.
 
 ### Game Overview
 
-This RPG game exercise is a simplified application inspired by the classic elements of Dungeons & Dragons. It features a digital environment where players can experience the thrill of an RPG with less complexity, making it accessible for newcomers and enjoyable for seasoned players.
+This app is a digital role-playing game, although it simplifies some aspects of traditional role-playing games.
 
 #### The Gameplay
 
-- **Game Structure**: The game progresses from a defined start to an end, featuring multiple players and a game master.
-- **Characters**: At the start, players are assigned characters with predefined XP (experience points).
-- **Game Master (GM)**: The GM initiates the game, assigns characters, and has the authority to modify game dynamics moderately but is not omnipotent.
-- **Player Actions**: Players use their XP to perform actions. They have the option to exit the game, removing their characters from the play.
-- **Non-Playing Characters (NPCs)**: Managed by the GM, NPCs can be part of the game from the beginning or introduced later. The GM controls their actions and XP.
+- **Game Structure**: The game has a clear start and end. Each game includes several players, which can enter or leave the game at some point.
+- **Characters**: Players are given characters with a certain amount of XP (experience points) at the beginning.
+- **Game Master (GM)**: The GM starts the game, adds characters, and has certain powers to change the game after it has started. However, the GM is not all-powerful and cannot do everything.
+- **Player Actions**: Players can use their XP to perform actions or choose to leave the game, which removes their character from play.
+
+#### Non-Playing Characters (NPCs)
+
+- NPCs can be part of the game from the start or can be added later by the GM. The GM controls these characters, using their XP for actions or choosing to remove them from the game anytime.
 
 ### Game Rules
 
-- **Starting the Game**: The GM begins the game, assigns characters to players, and sets the initial scene.
-- **During the Game**: Players take turns to use their XP for actions. The GM can alter the course by adjusting XP and introducing new players or NPCs.
-- **Ending the Game**: The game concludes when the predefined end conditions are met.
+- **Starting the Game**: The GM sets up the game, assigns characters to players, and establishes the initial game conditions.
+- **During the Game**: Players take turns using their XP to take actions. The GM can also change the game by adjusting XP or adding characters.
+- **Ending the Game**: The game ends when it reaches its planned endpoint.
 
 ## How to Install the App
 
@@ -34,5 +37,5 @@ This RPG game exercise is a simplified application inspired by the classic eleme
 
 ## Credits
 
-This game takes inspiration from Dungeons & Dragons, a pioneer in the RPG genre.
+Many ideas about the game development and rules are inspired by Dungeons & Dragons, a major influence in the role-playing game genre.
 

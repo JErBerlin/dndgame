@@ -1,7 +1,11 @@
 // Package player manages the player entities withing the game.
 package player
 
-import "internal/character"
+import (
+	"fmt"
+
+	"github.com/jerberlin/dndgame/internal/character"
+)
 
 // PlayerStatus defines possible states of a player using an enumeration.
 type PlayerStatus int
@@ -15,7 +19,7 @@ const (
 type Player struct {
 	PlayerID   string
 	Name       string
-	Status     string
+	Status     PlayerStatus
 	Characters []character.Character
 }
 
@@ -25,14 +29,14 @@ func (p *Player) AddCharacter(c character.Character) {
 }
 
 // RemoveCharacter removes a character from the player's list by ID.
-func (p *Player) RemoveCharacter(characterID string) {
+func (p *Player) RemoveCharacter(characterID string) error {
 	for i, char := range p.Characters {
 		if char.CharacterID == characterID {
 			p.Characters = append(p.Characters[:i], p.Characters[i+1:]...)
-			return
+			return nil
 		}
 	}
-	// TODO: Handle error if character not found
+	return fmt.Errorf("character not found")
 }
 
 // SetStatus changes the status of the player.

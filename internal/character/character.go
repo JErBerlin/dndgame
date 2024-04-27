@@ -1,27 +1,27 @@
 // Package character manages player and non-player characters within the game.
 package character
 
-import "internal/action"
+import "github.com/jerberlin/dndgame/internal/action"
 
 // CharacterClass defines common classes a character may belong to.
-type CharacterClass string
+type CharacterClass int
 
 const (
-	Wizard  CharacterClass = "Wizard" // Also called magic-user in dnd.
-	Warrior CharacterClass = "Warrior"
-	Cleric  CharacterClass = "Cleric"
-	Ranger  CharacterClass = "Ranger" // Also called muntaner or montaraz.
+	Wizard CharacterClass = iota // Also called magic-user in D&D
+	Warrior
+	Cleric
+	Ranger // Also called muntaner or montaraz
 )
 
-// CharacterRace defines common races a character may belong to.
-type CharacterRace string
+// CharacterRace defines common races a character may belong to as integer enums.
+type CharacterRace int
 
 const (
-	Human CharacterRace = "Human"
-	Elf   CharacterRace = "Elf"
-	Dwarf CharacterRace = "Dwarf"
-	Orc   CharacterRace = "Orc"
-	Ghost CharacterRace = "Ghost"
+	Human CharacterRace = iota
+	Elf
+	Dwarf
+	Orc
+	Ghost
 )
 
 // Attributes represents the key characteristics of a character.
@@ -88,10 +88,12 @@ func (c *Character) UpdateAttributes(attrs Attributes) {
 
 // ClassString returns the string representation of the CharacterClass.
 func (c CharacterClass) String() string {
-	return [...]string{"Fighter", "Wizard", "Cleric", "Rogue"}[c]
+	classNames := [...]string{"Wizard", "Warrior", "Cleric", "Ranger"}
+	return classNames[c]
 }
 
 // RaceString returns the string representation of the CharacterRace.
 func (r CharacterRace) String() string {
-	return [...]string{"Human", "Dwarf", "Elf", "Halfling"}[r]
+	raceNames := [...]string{"Human", "Elf", "Dwarf", "Orc", "Ghost"}
+	return raceNames[r]
 }

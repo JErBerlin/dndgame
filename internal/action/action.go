@@ -16,3 +16,13 @@ type ActionInstance struct {
 	CustomXPCost int
 	Approved     bool
 }
+
+// CreateInstance creates a new action instance customized for a character.
+func (a *Action) CreateInstance(characterID string, customXPCost int) ActionInstance {
+	return ActionInstance{
+		Action:       *a,
+		CharacterID:  characterID,
+		CustomXPCost: customXPCost,
+		Approved:     false,
+	}
+}

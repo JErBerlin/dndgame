@@ -2,6 +2,7 @@
 package game
 
 import (
+	"fmt"
 	"internal/action"
 	"internal/character"
 	"internal/game_master"
@@ -34,22 +35,33 @@ type Game struct {
 	Actions    []action.Action
 }
 
-// AddPlayer adds a new player to the game.
-func (g *Game) AddPlayer(p player.Player) {
-	// TODO: Implement adding a player to the game
+// SetStatus changes the status of the game.
+func (g *Game) SetStatus(newStatus GameStatus) {
+	g.Status = newStatus
 }
 
-// RemovePlayer removes a player from the game.
-func (g *Game) RemovePlayer(playerID string) {
-	// TODO: Implement removing a player
+// AddPlayer adds a new player to the game.
+func (g *Game) AddPlayer(p player.Player) {
+	g.Players = append(g.Players, p)
+}
+
+// RemovePlayer removes a player from the game by ID.
+func (g *Game) RemovePlayer(playerID string) (err error) {
+	for i, p := range g.Players {
+		if p.PlayerID == playerID {
+			g.Players = append(g.Players[:i], g.Players[i+1:]...)
+			return nil
+		}
+	}
+	return fmt.Errorf("player with ID %s not found", playerID)
 }
 
 // AddCharacter adds a new character to the game.
 func (g *Game) AddCharacter(c character.Character) {
-	// TODO: Implement adding a character to the game
+	g.Characters = append(g.Characters, c)
 }
 
 // AddAction adds a new action template to the game.
 func (g *Game) AddAction(a action.Action) {
-	// TODO: Implement adding an action to the game
+	g.Actions = append(g.Actions, a)
 }

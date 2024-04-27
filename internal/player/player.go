@@ -21,12 +21,18 @@ type Player struct {
 
 // AddCharacter adds a new character to the player's list.
 func (p *Player) AddCharacter(c character.Character) {
-	// TODO: Implement adding a character the player's list
+	p.Characters = append(p.Characters, c)
 }
 
-// RemoveCharacter removes a character from the player's list.
+// RemoveCharacter removes a character from the player's list by ID.
 func (p *Player) RemoveCharacter(characterID string) {
-	// TODO: Implement removing a character
+	for i, char := range p.Characters {
+		if char.CharacterID == characterID {
+			p.Characters = append(p.Characters[:i], p.Characters[i+1:]...)
+			return
+		}
+	}
+	// TODO: Handle error if character not found
 }
 
 // SetStatus changes the status of the player.

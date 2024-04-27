@@ -18,7 +18,7 @@ type GameMaster struct {
 
 // ApproveAction approves an action instance chosen by a player to be executed by the players character.
 func (gm *GameMaster) ApproveAction(instanceID string) {
-	// TODO: Implement approval mechanism
+	ai.Approved = true // For now, it simply approves the action.
 }
 
 // SetStatus changes the status of the game master.

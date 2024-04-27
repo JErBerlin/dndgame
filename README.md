@@ -13,9 +13,9 @@ This app is a digital role-playing game, although it simplifies some aspects of 
 #### The Gameplay and Rules
 
 - **Game Structure**: The game has a clear start and end. Each game includes several players, which can enter or leave the game at some point.
-- **Characters**: Players are given characters with a certain amount of XP (experience points) at the beginning.
+- **Characters**: Players create their characters according to rules at the beginning of the game. They are give certain amount of XP (experience points) to start with. It is a game goal to increase the XP points until the end of the game, but the XPs have to be spent also to navigate the adventure.
 - **Game Master (GM)**: The GM starts the game, adds characters, and is the director of the game after it has started. The GM decides whether to approve a chosen action from a player. The GM can set the XP points that an action costs or gives as a reward for a specific character, and can even give XP points to the characters independently of actions. However, the GM is not all-powerful and has to abide by certain rules too. 
-- **Player Actions**: Players make choices that are later approved by the Game Master. Once the game has started, they can use their XP to try to perform an action. Games usually come with a basic repertoir of actions, which players can choose from or use as a template to suggest an action for their character. Each chosen action can then be modified by the GM before aproval, but it is up to the player to decide whether to execute the action at the end. Players can also decide to retrieve their character from the game.
+- **Player Actions**: Players make choices that are later approved by the Game Master. Once the game has started, they can use their XP to try to perform an action. These actions have a cost in XP but they also have rewards or penalties (depending on the outcome of the action). Games usually come with a basic repertoir of actions, which players can choose from or use as a template to suggest an action for their character. Each chosen action can then be modified by the GM before aproval, but it is up to the player to decide whether to execute the action at the end. Players can also decide to retrieve their character from the game.
 
 ##### Non-Playing Characters (NPCs)
 
@@ -33,7 +33,7 @@ A game is always a specific type of adventure. **Adventures** provide a thematic
 
 ### Character 
 
-A player will manageone or more characters in the game. Characters are described by its class, race, and detailed attributes:
+A player will manage one or more characters in the game. Characters are described by its class, race, and detailed attributes:
 - **Lysias, the Northern Ranger**
   - **Class**: Ranger
   - **Race**: Human

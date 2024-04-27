@@ -10,22 +10,16 @@ Role-playing games, like Dungeons & Dragons, began in the 1970s. These games inv
 
 This app is a digital role-playing game, although it simplifies some aspects of traditional role-playing games.
 
-#### The Gameplay
+#### The Gameplay and Rules
 
 - **Game Structure**: The game has a clear start and end. Each game includes several players, which can enter or leave the game at some point.
 - **Characters**: Players are given characters with a certain amount of XP (experience points) at the beginning.
 - **Game Master (GM)**: The GM starts the game, adds characters, and is the director of the game after it has started. The GM decides whether to approve a chosen action from a player. The GM can set the XP points that an action costs or gives as a reward for a specific character, and can even give XP points to the characters independently of actions. However, the GM is not all-powerful and has to abide by certain rules too. 
 - **Player Actions**: Players make choices that are later approved by the Game Master. Once the game has started, they can use their XP to try to perform an action. Games usually come with a basic repertoir of actions, which players can choose from or use as a template to suggest an action for their character. Each chosen action can then be modified by the GM before aproval, but it is up to the player to decide whether to execute the action at the end. Players can also decide to retrieve their character from the game.
 
-#### Non-Playing Characters (NPCs)
+##### Non-Playing Characters (NPCs)
 
 - NPCs can be part of the game from the start or can be added later by the GM. The GM controls these characters, using their XP for actions or choosing to remove them from the game anytime.
-
-### Game Rules
-
-- **Starting the Game**: The GM sets up the game, assigns characters to players, and establishes the initial game conditions.
-- **During the Game**: Players take turns using their XP to take actions. The GM can also change the game by adjusting XP or adding characters.
-- **Ending the Game**: The game ends when it reaches its planned endpoint.
 
 ### Adventures and Missions
 

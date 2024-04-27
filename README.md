@@ -27,6 +27,25 @@ This app is a digital role-playing game, although it simplifies some aspects of 
 - **During the Game**: Players take turns using their XP to take actions. The GM can also change the game by adjusting XP or adding characters.
 - **Ending the Game**: The game ends when it reaches its planned endpoint.
 
+### Adventures and Missions
+
+A game is always a specific type of adventure. **Adventures** provide thematic contexts for sessions. There are these types of adventure:
+- **Dungeon Crawls**: Exploring complexes filled with monsters, traps, and treasure.
+- **Quests**: Missions to retrieve items, rescue characters, or defeat villains.
+- **Campaigns**: Extended narratives over multiple sessions for character and plot development.
+
+**Missions** are objectives within adventures, for example:
+- **Quest: Rescue at Griffin's Peak**: Climb Griffin's Peak to rescue a famous royal botanist from ill-intentioned enemies.
+
+### Character 
+
+A player will manageone or more characters in the game. Characters are described by its class, race, and detailed attributes:
+- **Lysias, the Northern Ranger**
+  - **Class**: Ranger
+  - **Race**: Human
+  - **Description**: A skilled tracker from the northern mountains, reflexive and resourceful in wilderness survival and combat.
+  - **Attributes**: Strength: 14, Dexterity: 15, Constitution: 13, Intelligence: 16, Wisdom: 17, Charisma: 10
+
 ## How to Install the App
 
 `TODO: Add installation instructions here`

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jerberlin/dndgame/internal/action"
-	"github.com/jerberlin/dndgame/internal/character"
-	"github.com/jerberlin/dndgame/internal/game_master"
-	"github.com/jerberlin/dndgame/internal/player"
+	"github.com/jerberlin/dndgame/internal/model/action"
+	"github.com/jerberlin/dndgame/internal/model/character"
+	"github.com/jerberlin/dndgame/internal/model/game_master"
+	"github.com/jerberlin/dndgame/internal/model/player"
 )
 
 // GameStatus defines possible states of a game

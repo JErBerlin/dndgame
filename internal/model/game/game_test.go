@@ -3,9 +3,9 @@ package game
 import (
 	"testing"
 
-	"github.com/jerberlin/dndgame/internal/action"
-	"github.com/jerberlin/dndgame/internal/character"
-	"github.com/jerberlin/dndgame/internal/player"
+	"github.com/jerberlin/dndgame/internal/model/action"
+	"github.com/jerberlin/dndgame/internal/model/character"
+	"github.com/jerberlin/dndgame/internal/model/player"
 )
 
 func TestSetStatus(t *testing.T) {

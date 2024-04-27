@@ -4,7 +4,7 @@ package player
 import (
 	"fmt"
 
-	"github.com/jerberlin/dndgame/internal/character"
+	"github.com/jerberlin/dndgame/internal/model/character"
 )
 
 // PlayerStatus defines possible states of a player using an enumeration.

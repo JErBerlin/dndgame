@@ -3,7 +3,7 @@ package character
 import (
 	"testing"
 
-	"github.com/jerberlin/dndgame/internal/action"
+	"github.com/jerberlin/dndgame/internal/model/action"
 )
 
 func TestNewCharacter(t *testing.T) {

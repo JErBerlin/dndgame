@@ -4,7 +4,7 @@ package game_master
 import (
 	"errors"
 
-	"github.com/jerberlin/dndgame/internal/action"
+	"github.com/jerberlin/dndgame/internal/model/action"
 )
 
 // GameMasterStatus defines possible states of a game master.

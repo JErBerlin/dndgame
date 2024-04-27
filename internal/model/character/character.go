@@ -1,7 +1,7 @@
 // Package character manages player and non-player characters within the game.
 package character
 
-import "github.com/jerberlin/dndgame/internal/action"
+import "github.com/jerberlin/dndgame/internal/model/action"
 
 // CharacterClass defines common classes a character may belong to.
 type CharacterClass int

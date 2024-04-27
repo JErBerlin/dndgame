@@ -29,7 +29,7 @@ This app is a digital role-playing game, although it simplifies some aspects of 
 
 ### Adventures and Missions
 
-A game is always a specific type of adventure. **Adventures** provide thematic contexts for sessions. There are these types of adventure:
+A game is always a specific type of adventure. **Adventures** provide a thematic and a strategic contexts, and also serves to inform the players about the game expectations. There are these types of adventure:
 - **Dungeon Crawls**: Exploring complexes filled with monsters, traps, and treasure.
 - **Quests**: Missions to retrieve items, rescue characters, or defeat villains.
 - **Campaigns**: Extended narratives over multiple sessions for character and plot development.

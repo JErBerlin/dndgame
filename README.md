@@ -14,8 +14,8 @@ This app is a digital role-playing game, although it simplifies some aspects of 
 
 - **Game Structure**: The game has a clear start and end. Each game includes several players, which can enter or leave the game at some point.
 - **Characters**: Players are given characters with a certain amount of XP (experience points) at the beginning.
-- **Game Master (GM)**: The GM starts the game, adds characters, and has certain powers to change the game after it has started. However, the GM is not all-powerful and cannot do everything.
-- **Player Actions**: Players can use their XP to perform actions or choose to leave the game, which removes their character from play.
+- **Game Master (GM)**: The GM starts the game, adds characters, and is the director of the game after it has started. The GM decides whether to approve a chosen action from a player. The GM can set the XP points that an action costs or gives as a reward for a specific character, and can even give XP points to the characters independently of actions. However, the GM is not all-powerful and has to abide by certain rules too. 
+- **Player Actions**: Players make choices that are later approved by the Game Master. Once the game has started, they can use their XP to try to perform an action. Games usually come with a basic repertoir of actions, which players can choose from or use as a template to suggest an action for their character. Each chosen action can then be modified by the GM before aproval, but it is up to the player to decide whether to execute the action at the end. Players can also decide to retrieve their character from the game.
 
 #### Non-Playing Characters (NPCs)
 

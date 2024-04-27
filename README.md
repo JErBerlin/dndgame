@@ -4,7 +4,7 @@
 
 ### Some Background History
 
-Role-playing games, like Dungeons & Dragons, began in the 1970s. These games involve players taking on the roles of characters in a fictional setting, guided by a game master. These games have expanded from playing at a table with paper and pens to include versions that use digital technology and apps.
+Role-playing games, like Dungeons & Dragons, began in the 1970s. These games involve players taking on the roles of characters in a fictional setting, guided by a game master. Since then RP games have evolved from playing at a table with paper and pens to modalities that are app-assisted or can be played on-line.
 
 ### Game Overview
 

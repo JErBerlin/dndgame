@@ -18,6 +18,30 @@ const (
 	Active                     // after activation
 )
 
+// AdventureType defines different kinds of adventures in the game.
+type AdventureType int
+
+const (
+	// DungeonCrawls: Exploring underground complexes filled with monsters, traps, and treasure.
+	DungeonCrawls AdventureType = iota
+	// Quests: Embarking on missions to retrieve magical items, rescue characters, or defeat a villain.
+	Quests
+	// Campaigns: Longer adventures that could evolve over multiple gaming sessions, building a narrative and developing characters.
+	Campaigns
+)
+
+// Mission represents a specific task or challenge within an adventure.
+type Mission struct {
+	Name        string
+	Description string
+}
+
+// Adventure represents a specific type of game scenario.
+type Adventure struct {
+	Type     AdventureType
+	Missions []Mission
+}
+
 // Game represents the game entity with its list of possible game actions.
 // The Game is directed by a Game Master.
 // The actions are chosen by Players for one of their characters.
@@ -64,4 +88,18 @@ func (g *Game) AddCharacter(c character.Character) {
 // AddAction adds a new action template to the game.
 func (g *Game) AddAction(a action.Action) {
 	g.Actions = append(g.Actions, a)
+}
+
+// AddAdventure adds a new adventure to the game.
+func (g *Game) AddAdventure(adventure Adventure) {
+	g.Adventures = append(g.Adventures, adventure)
+}
+
+// AddMissionToAdventure adds a mission to a specific adventure.
+func (g *Game) AddMissionToAdventure(adventureIndex int, mission Mission) error {
+	if adventureIndex < 0 || adventureIndex >= len(g.Adventures) {
+		return fmt.Errorf("invalid adventure index %d", adventureIndex)
+	}
+	g.Adventures[adventureIndex].Missions = append(g.Adventures[adventureIndex].Missions, mission)
+	return nil
 }

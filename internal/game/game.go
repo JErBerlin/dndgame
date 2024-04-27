@@ -3,11 +3,12 @@ package game
 
 import (
 	"fmt"
-	"internal/action"
-	"internal/character"
-	"internal/game_master"
-	"internal/player"
 	"time"
+
+	"github.com/jerberlin/dndgame/internal/action"
+	"github.com/jerberlin/dndgame/internal/character"
+	"github.com/jerberlin/dndgame/internal/game_master"
+	"github.com/jerberlin/dndgame/internal/player"
 )
 
 // GameStatus defines possible states of a game
@@ -22,12 +23,9 @@ const (
 type AdventureType int
 
 const (
-	// DungeonCrawls: Exploring underground complexes filled with monsters, traps, and treasure.
-	DungeonCrawls AdventureType = iota
-	// Quests: Embarking on missions to retrieve magical items, rescue characters, or defeat a villain.
-	Quests
-	// Campaigns: Longer adventures that could evolve over multiple gaming sessions, building a narrative and developing characters.
-	Campaigns
+	DungeonCrawls AdventureType = iota // Exploring underground complexes filled with monsters, traps, and treasure.
+	Quests                             // Embarking on missions to retrieve magical items, rescue characters, or defeat a villain.
+	Campaigns                          // Longer adventures that could evolve over multiple gaming sessions.
 )
 
 // Mission represents a specific task or challenge within an adventure.
@@ -38,8 +36,8 @@ type Mission struct {
 
 // Adventure represents a specific type of game scenario.
 type Adventure struct {
-	Type     AdventureType
-	Missions []Mission
+	Type    AdventureType
+	Mission Mission // singular mission adventure
 }
 
 // Game represents the game entity with its list of possible game actions.
@@ -53,10 +51,11 @@ type Game struct {
 	StartTime  time.Time
 	EndTime    time.Time
 	Status     GameStatus
-	Player     []player.Player
+	Players    []player.Player
 	Characters []character.Character
 	GameMaster game_master.GameMaster
 	Actions    []action.Action
+	Adventure  Adventure // singular adventure
 }
 
 // SetStatus changes the status of the game.
@@ -90,16 +89,12 @@ func (g *Game) AddAction(a action.Action) {
 	g.Actions = append(g.Actions, a)
 }
 
-// AddAdventure adds a new adventure to the game.
-func (g *Game) AddAdventure(adventure Adventure) {
-	g.Adventures = append(g.Adventures, adventure)
+// SetAdventure sets a new adventure to the game.
+func (g *Game) SetAdventure(adventure Adventure) {
+	g.Adventure = adventure
 }
 
-// AddMissionToAdventure adds a mission to a specific adventure.
-func (g *Game) AddMissionToAdventure(adventureIndex int, mission Mission) error {
-	if adventureIndex < 0 || adventureIndex >= len(g.Adventures) {
-		return fmt.Errorf("invalid adventure index %d", adventureIndex)
-	}
-	g.Adventures[adventureIndex].Missions = append(g.Adventures[adventureIndex].Missions, mission)
-	return nil
+// SetMission sets a mission for the current adventure.
+func (g *Game) SetMission(mission Mission) {
+	g.Adventure.Mission = mission
 }

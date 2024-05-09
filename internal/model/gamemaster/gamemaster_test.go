@@ -1,4 +1,4 @@
-package game_master
+package gamemaster
 
 import (
 	"testing"

@@ -1,5 +1,5 @@
 // Package game_master presents the game master agent responsible for directing the game.
-package game_master
+package gamemaster
 
 import (
 	"errors"
@@ -17,7 +17,7 @@ const (
 
 // GameMaster represents the game master directing the game.
 type GameMaster struct {
-	GMID   string
+	ID     string
 	Name   string
 	Status GameMasterStatus
 }

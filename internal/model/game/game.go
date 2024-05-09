@@ -7,7 +7,7 @@ import (
 
 	"github.com/jerberlin/dndgame/internal/model/action"
 	"github.com/jerberlin/dndgame/internal/model/character"
-	"github.com/jerberlin/dndgame/internal/model/game_master"
+	"github.com/jerberlin/dndgame/internal/model/gamemaster"
 	"github.com/jerberlin/dndgame/internal/model/player"
 )
 
@@ -53,7 +53,7 @@ type Game struct {
 	Status     GameStatus
 	Players    []player.Player
 	Characters []character.Character
-	GameMaster game_master.GameMaster
+	GameMaster gamemaster.GameMaster
 	Actions    []action.Action
 	Adventure  Adventure // singular adventure
 }

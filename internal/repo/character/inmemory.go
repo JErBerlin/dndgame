@@ -21,37 +21,43 @@ func NewInMemoryCharacterRepository() *InMemoryCharacterRepository {
 func (r *InMemoryCharacterRepository) CreateCharacter(c *character.Character) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.characters[c.CharacterID]; exists {
+	if _, exists := r.characters[c.Id]; exists {
 		return errors.New("character already exists")
 	}
-	r.characters[c.CharacterID] = c
+	r.characters[c.Id] = c
 	return nil
 }
 
 func (r *InMemoryCharacterRepository) UpdateCharacter(c *character.Character) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.characters[c.CharacterID]; !exists {
+	if existingChar, exists := r.characters[c.Id]; !exists {
 		return errors.New("character not found")
+	} else {
+		// Update the character's attributes and XP.
+		existingChar.Attributes = c.Attributes
+		existingChar.XP = c.XP
+		existingChar.Status = c.Status // TODO: full overwrite?
+		existingChar.ActionInstances = c.ActionInstances // TODO: full overwrite?
 	}
-	r.characters[c.CharacterID] = c
 	return nil
 }
 
-func (r *InMemoryCharacterRepository) DeleteCharacter(characterID string) error {
+
+func (r *InMemoryCharacterRepository) DeleteCharacter(characterId string) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.characters[characterID]; !exists {
+	if _, exists := r.characters[characterId]; !exists {
 		return errors.New("character not found")
 	}
-	delete(r.characters, characterID)
+	delete(r.characters, characterId)
 	return nil
 }
 
-func (r *InMemoryCharacterRepository) GetCharacterByID(characterID string) (*character.Character, error) {
+func (r *InMemoryCharacterRepository) GetCharacterByID(characterId string) (*character.Character, error) {
 	r.mutex.RLock()
 	defer r.mutex.RUnlock()
-	if character, exists := r.characters[characterID]; exists {
+	if character, exists := r.characters[characterId]; exists {
 		return character, nil
 	}
 	return nil, errors.New("character not found")

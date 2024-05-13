@@ -2,13 +2,7 @@
 package game
 
 import (
-	"fmt"
 	"time"
-
-	"github.com/jerberlin/dndgame/internal/model/action"
-	"github.com/jerberlin/dndgame/internal/model/character"
-	"github.com/jerberlin/dndgame/internal/model/gamemaster"
-	"github.com/jerberlin/dndgame/internal/model/player"
 )
 
 // GameStatus defines possible states of a game
@@ -21,8 +15,9 @@ const (
 
 // Adventure represents a specific type of game scenario.
 type Adventure struct {
-	Type    AdventureType
-	Mission Mission // singular mission adventure for now
+	Id        string
+	Type      AdventureType
+	MissionId string // Foreign key linking to Mission. Single mission adventures for now.
 }
 
 // AdventureType defines different kinds of adventures in the game.
@@ -34,8 +29,14 @@ const (
 	Campaigns                          // Longer adventures that could evolve over multiple gaming sessions.
 )
 
+func (a Adventure) TypeString() string {
+	adventureNames := [...]string{"DungeonCrawls","Quests","Campaigns"}
+	return adventureNames[a.Type]
+}
+
 // Mission represents a specific task or challenge within an adventure.
 type Mission struct {
+	Id          string
 	Name        string
 	Description string
 }
@@ -45,16 +46,13 @@ type Mission struct {
 // The actions are chosen by Players for one of their characters.
 // A game has at a given point either the status active or inactive.
 type Game struct {
-	Id         string
-	Name       string
-	StartTime  time.Time
-	EndTime    time.Time
-	Status     GameStatus
-	Players    []player.Player
-	Characters []character.Character
-	GameMaster gamemaster.GameMaster
-	Actions    []action.Action
-	Adventure  Adventure // singular adventure
+	Id           string
+	Name         string
+	StartTime    time.Time
+	EndTime      time.Time
+	Status       GameStatus
+	GameMasterId string // Foreign key linking to GameMaster
+	AdventureId  string // Foreign key linking to Adventure
 }
 
 type GameOptions struct {
@@ -91,38 +89,7 @@ func (g *Game) SetStatus(newStatus GameStatus) {
 	g.Status = newStatus
 }
 
-// AddPlayer adds a new player to the game.
-func (g *Game) AddPlayer(p player.Player) {
-	g.Players = append(g.Players, p)
-}
-
-// RemovePlayer removes a player from the game by ID.
-func (g *Game) RemovePlayer(playerId string) (err error) {
-	for i, p := range g.Players {
-		if p.Id == playerId {
-			g.Players = append(g.Players[:i], g.Players[i+1:]...)
-			return nil
-		}
-	}
-	return fmt.Errorf("player with Id %s not found", playerId)
-}
-
-// AddCharacter adds a new character to the game.
-func (g *Game) AddCharacter(c character.Character) {
-	g.Characters = append(g.Characters, c)
-}
-
-// AddAction adds a new action template to the game.
-func (g *Game) AddAction(a action.Action) {
-	g.Actions = append(g.Actions, a)
-}
-
 // SetAdventure sets a new adventure to the game.
-func (g *Game) SetAdventure(adventure Adventure) {
-	g.Adventure = adventure
-}
-
-// AddMission sets a mission for the current adventure.
-func (g *Game) AddMission(mission Mission) {
-	g.Adventure.Mission = mission
+func (g *Game) SetAdventure(adventureId string) {
+	g.AdventureId = adventureId
 }

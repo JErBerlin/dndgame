@@ -19,6 +19,12 @@ const (
 	Active                     // after activation
 )
 
+// Adventure represents a specific type of game scenario.
+type Adventure struct {
+	Type    AdventureType
+	Mission Mission // singular mission adventure for now
+}
+
 // AdventureType defines different kinds of adventures in the game.
 type AdventureType int
 
@@ -34,19 +40,12 @@ type Mission struct {
 	Description string
 }
 
-// Adventure represents a specific type of game scenario.
-type Adventure struct {
-	Type    AdventureType
-	Mission Mission // singular mission adventure
-}
-
 // Game represents the game entity with its list of possible game actions.
 // The Game is directed by a Game Master.
 // The actions are chosen by Players for one of their characters.
-// Each game has at cretion a defined start time and an end time.
-// A game is at given point either the status active or inactive.
+// A game has at a given point either the status active or inactive.
 type Game struct {
-	GameID     string
+	Id         string
 	Name       string
 	StartTime  time.Time
 	EndTime    time.Time
@@ -56,6 +55,35 @@ type Game struct {
 	GameMaster gamemaster.GameMaster
 	Actions    []action.Action
 	Adventure  Adventure // singular adventure
+}
+
+type GameOptions struct {
+	StartTime time.Time
+	EndTime   time.Time
+	Status    GameStatus
+}
+
+// NewGame creates a new game with provided id, name, and optional settings.
+// GameOptions is optational but when given, only one GameOptions is supported.
+func NewGame(id string, name string, opts ...*GameOptions) *Game {
+	g := &Game{
+		Id:        id,
+		Name:      name,
+		StartTime: time.Now(), // Default start time (can be overridden)
+		Status:    Inactive,   // Default status
+	}
+
+	if len(opts) > 0 && opts[0] != nil {
+		if !opts[0].StartTime.IsZero() {
+			g.StartTime = opts[0].StartTime
+		}
+		if !opts[0].EndTime.IsZero() {
+			g.EndTime = opts[0].EndTime
+		}
+		g.Status = opts[0].Status
+	}
+
+	return g
 }
 
 // SetStatus changes the status of the game.
@@ -69,14 +97,14 @@ func (g *Game) AddPlayer(p player.Player) {
 }
 
 // RemovePlayer removes a player from the game by ID.
-func (g *Game) RemovePlayer(playerID string) (err error) {
+func (g *Game) RemovePlayer(playerId string) (err error) {
 	for i, p := range g.Players {
-		if p.PlayerID == playerID {
+		if p.Id == playerId {
 			g.Players = append(g.Players[:i], g.Players[i+1:]...)
 			return nil
 		}
 	}
-	return fmt.Errorf("player with ID %s not found", playerID)
+	return fmt.Errorf("player with Id %s not found", playerId)
 }
 
 // AddCharacter adds a new character to the game.
@@ -94,7 +122,7 @@ func (g *Game) SetAdventure(adventure Adventure) {
 	g.Adventure = adventure
 }
 
-// SetMission sets a mission for the current adventure.
-func (g *Game) SetMission(mission Mission) {
+// AddMission sets a mission for the current adventure.
+func (g *Game) AddMission(mission Mission) {
 	g.Adventure.Mission = mission
 }

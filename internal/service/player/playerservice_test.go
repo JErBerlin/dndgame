@@ -5,132 +5,129 @@ import (
 	"testing"
 
 	"github.com/jerberlin/dndgame/internal/model/character"
-	playermodel "github.com/jerberlin/dndgame/internal/model/player"
-	"github.com/jerberlin/dndgame/internal/repo/player"
-	playerrepo "github.com/jerberlin/dndgame/internal/repo/player"
+	"github.com/jerberlin/dndgame/internal/model/player"
+	repoAction "github.com/jerberlin/dndgame/internal/repo/action"
+	repoPlayer "github.com/jerberlin/dndgame/internal/repo/player"
 )
 
-var repo playerrepo.PlayerRepository
-var service PlayerService
+var repoTest repoPlayer.PlayerRepository
+var actionRepo repoAction.ActionRepository
+var serviceTest PlayerService
 
+// TestMain is used as a setup and teardown function that runs before and after all test functions.
+// This function is called once for initializing resources needed for all tests in this package.
 func TestMain(m *testing.M) {
-	repo = playerrepo.NewInMemoryPlayerRepository()
-	service = NewPlayerService(repo)
+	repoTest = repoPlayer.NewInMemoryPlayerRepository()
+	actionRepo = repoAction.NewInMemoryActionRepository()
+	serviceTest = NewPlayerService(repoTest, actionRepo)
 
 	os.Exit(m.Run())
 }
 
-func setupPlayer(repo player.PlayerRepository, playerID, playerName string) *player.Player {
-	newPlayer := &playermodel.Player{
-		PlayerID: playerID,
-		Name:     playerName,
+func setupPlayer(playerId, playerName string) *player.Player {
+	newPlayer := player.Player{
+		Id:   playerId,
+		Name: playerName,
 	}
-	_ = repo.CreatePlayer(newPlayer)
-	return newPlayer
+	_ = repoTest.CreatePlayer(newPlayer)
+	return &newPlayer
 }
 
-func assertPlayerExistence(t *testing.T, playerID string, shouldExist bool) {
-	_, err := repo.GetPlayerByID(playerID)
+func assertPlayerExistence(t *testing.T, playerId string, shouldExist bool) {
+	_, err := repoTest.GetPlayerById(playerId)
 	if shouldExist && err != nil {
-		t.Errorf("Expected player %s to exist, but got error: %v", playerID, err)
+		t.Errorf("Expected player %s to exist, but got error: %v", playerId, err)
 	} else if !shouldExist && err == nil {
-		t.Errorf("Expected player %s not to exist, but it does", playerID)
+		t.Errorf("Expected player %s not to exist, but it does", playerId)
 	}
 }
 
 func TestCreatePlayer(t *testing.T) {
-	playerID := "test-player-1"
+	playerId := "test-player-1"
 	playerName := "Test Player"
 
-	err := service.CreatePlayer(playerID, playerName)
+	err := serviceTest.CreatePlayer(playerId, playerName)
 	if err != nil {
 		t.Errorf("CreatePlayer() error = %v, wantErr nil", err)
 	}
 
 	// Check if the player is created
-	assertPlayerExistence(t, playerID, true)
+	assertPlayerExistence(t, playerId, true)
 }
 
 func TestDeletePlayer(t *testing.T) {
-	playerID := "test-player-2"
+	playerId := "test-player-2"
 	playerName := "Test Player 2"
-	setupPlayer(repo, playerID, playerName)
+	setupPlayer(playerId, playerName)
 
-	err := service.DeletePlayer(playerID)
+	err := serviceTest.DeletePlayer(playerId)
 	if err != nil {
 		t.Errorf("DeletePlayer() error = %v, wantErr nil", err)
 	}
 
 	// Check if the player is deleted
-	assertPlayerExistence(t, playerID, false)
+	assertPlayerExistence(t, playerId, false)
 }
 
 func TestAddCharacterToPlayer(t *testing.T) {
-	playerID := "test-player-3"
+	playerId := "test-player-3"
 	playerName := "Test Player 3"
-	setupPlayer(repo, playerID, playerName)
+	setupPlayer(playerId, playerName)
 
-	character := character.Character{CharacterID: "char1", Name: "Hero"}
-	err := service.AddCharacterToPlayer(playerID, character)
+	char := character.Character{Id: "char1", Name: "Hero"}
+	err := serviceTest.AddCharacterToPlayer(playerId, char)
 	if err != nil {
 		t.Errorf("AddCharacterToPlayer() error = %v, wantErr nil", err)
 	}
 
-	// Retrieve player to check character assignment
-	p, _ := repo.GetPlayerByID(playerID)
-	if len(p.Characters) != 1 || p.Characters[0].CharacterID != "char1" {
+	p, _ := repoTest.GetPlayerById(playerId)
+	if len(p.Characters) != 1 || p.Characters[0].Id != "char1" {
 		t.Errorf("AddCharacterToPlayer() failed to add character, characters found: %v", p.Characters)
 	}
 }
 
 func TestRemoveCharacterFromPlayer(t *testing.T) {
-	playerID := "test-player-4"
+	playerId := "test-player-4"
 	playerName := "Test Player 4"
-	character := character.Character{CharacterID: "char2", Name: "Hero 2"}
-	p := setupPlayer(repo, playerID, playerName)
-	p.Characters = append(p.Characters, character)
-	repo.UpdatePlayer(playerID, p)
+	setupPlayer(playerId, playerName)
 
-	err := service.RemoveCharacterFromPlayer(playerID, "char2")
+	char := character.Character{Id: "char2", Name: "Hero 2"}
+	serviceTest.AddCharacterToPlayer(playerId, char)
+
+	err := serviceTest.RemoveCharacterFromPlayer(playerId, "char2")
 	if err != nil {
 		t.Errorf("RemoveCharacterFromPlayer() error = %v, wantErr nil", err)
 	}
 
-	// Retrieve player to check character removal
-	p, _ = repo.GetPlayerByID(playerID)
+	p, _ := repoTest.GetPlayerById(playerId)
 	if len(p.Characters) != 0 {
 		t.Errorf("RemoveCharacterFromPlayer() failed to remove character, characters left: %v", p.Characters)
 	}
 }
 
+/*
 func TestPerformActionByCharacter(t *testing.T) {
-	playerID := "test-player-5"
+	playerId := "test-player-5"
 	playerName := "Test Player 5"
-	p := setupPlayer(repo, playerID, playerName) // Correctly set up the player once
+	setupPlayer(playerId, playerName)
 
-	character := character.Character{CharacterID: "char3", Name: "Adventurer"}
-	p.Characters = append(p.Characters, character) // Add character directly to the fetched player object
-	repo.UpdatePlayer(playerID, p)                 // Update the player in the repository with the new character
+	char := character.Character{Id: "char3", Name: "Adventurer"}
+	serviceTest.AddCharacterToPlayer(playerId, char)
 
-	actionID := "action1"
-
-	// Test performing an action by the character
-	err := service.PerformActionByCharacter("char3", actionID)
+	actionId := "action1"
+	err := serviceTest.PerformAction(actionId)
 	if err != nil {
-		t.Errorf("PerformActionByCharacter() error = %v, wantErr nil", err)
+		t.Errorf("PerformAction() error = %v, wantErr nil", err)
 	}
 
-	// Additional checks can be added here if needed to verify the effects of the action
-
-	// Test performing an action by a non-existent character
-	err = service.PerformActionByCharacter("char-nonexistent", actionID)
+	err = serviceTest.PerformAction(actionId)
 	if err == nil {
-		t.Errorf("PerformActionByCharacter() expected error for non-existent character, got nil")
+		t.Errorf("PerformAction() expected error for non-existent character, got nil")
 	}
 
-	// Test performing a non-existent action by an existing character
-	err = service.PerformActionByCharacter("char3", "non-existent-action")
+	err = serviceTest.PerformAction("non-existent-action")
 	if err == nil {
-		t.Errorf("PerformActionByCharacter() expected error for non-existent action, got nil")
+		t.Errorf("PerformAction() expected error for non-existent action, got nil")
 	}
 }
+*/

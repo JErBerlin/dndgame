@@ -18,52 +18,52 @@ func NewInMemoryPlayerRepository() *InMemoryPlayerRepository {
 	}
 }
 
-func (r *InMemoryPlayerRepository) CreatePlayer(p *player.Player) error {
+func (r *InMemoryPlayerRepository) CreatePlayer(p player.Player) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.players[p.PlayerID]; exists {
+	if _, exists := r.players[p.Id]; exists {
 		return errors.New("player already exists")
 	}
-	r.players[p.PlayerID] = p
+	r.players[p.Id] = &p
 	return nil
 }
 
-func (r *InMemoryPlayerRepository) UpdatePlayer(playerID string, p *player.Player) error {
+func (r *InMemoryPlayerRepository) UpdatePlayer(playerId string, p player.Player) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.players[playerID]; !exists {
+	if _, exists := r.players[playerId]; !exists {
 		return errors.New("player not found")
 	}
-	r.players[playerID] = p
+	r.players[playerId] = &p
 	return nil
 }
 
-func (r *InMemoryPlayerRepository) DeletePlayer(playerID string) error {
+func (r *InMemoryPlayerRepository) DeletePlayer(playerId string) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.players[playerID]; !exists {
+	if _, exists := r.players[playerId]; !exists {
 		return errors.New("player not found")
 	}
-	delete(r.players, playerID)
+	delete(r.players, playerId)
 	return nil
 }
 
-func (r *InMemoryPlayerRepository) GetPlayerByID(playerID string) (*player.Player, error) {
+func (r *InMemoryPlayerRepository) GetPlayerById(playerId string) (*player.Player, error) {
 	r.mutex.RLock()
 	defer r.mutex.RUnlock()
-	if player, exists := r.players[playerID]; exists {
+	if player, exists := r.players[playerId]; exists {
 		return player, nil
 	}
 	return nil, errors.New("player not found")
 }
 
 // ListPlayers retrieves all players stored in the repository.
-func (r *InMemoryPlayerRepository) ListPlayers() ([]*player.Player, error) {
+func (r *InMemoryPlayerRepository) ListPlayers() ([]player.Player, error) {
 	r.mutex.RLock()
 	defer r.mutex.RUnlock()
-	allPlayers := make([]*player.Player, 0, len(r.players))
+	allPlayers := make([]player.Player, 0, len(r.players))
 	for _, p := range r.players {
-		allPlayers = append(allPlayers, p)
+		allPlayers = append(allPlayers, *p)
 	}
 	return allPlayers, nil
 }

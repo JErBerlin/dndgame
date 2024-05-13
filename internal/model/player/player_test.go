@@ -8,27 +8,27 @@ import (
 
 func TestAddCharacter(t *testing.T) {
 	p := Player{
-		PlayerID:   "player1",
+		Id:         "player1",
 		Name:       "John Doe",
 		Status:     Active,
 		Characters: []character.Character{},
 	}
 	char := character.Character{
-		CharacterID: "char1",
-		Name:        "Hero",
+		Id:   "char1",
+		Name: "Hero",
 	}
 	p.AddCharacter(char)
 
-	if len(p.Characters) != 1 || p.Characters[0].CharacterID != "char1" {
+	if len(p.Characters) != 1 || p.Characters[0].Id != "char1" {
 		t.Errorf("Failed to add character to player, expected 1 character, got %d", len(p.Characters))
 	}
 }
 
 func TestRemoveCharacter(t *testing.T) {
-	char1 := character.Character{CharacterID: "char1", Name: "Hero1"}
-	char2 := character.Character{CharacterID: "char2", Name: "Hero2"}
+	char1 := character.Character{Id: "char1", Name: "Hero1"}
+	char2 := character.Character{Id: "char2", Name: "Hero2"}
 	p := Player{
-		PlayerID:   "player1",
+		Id:         "player1",
 		Name:       "John Doe",
 		Status:     Active,
 		Characters: []character.Character{char1, char2},
@@ -36,7 +36,7 @@ func TestRemoveCharacter(t *testing.T) {
 
 	p.RemoveCharacter("char1")
 
-	if len(p.Characters) != 1 || p.Characters[0].CharacterID != "char2" {
+	if len(p.Characters) != 1 || p.Characters[0].Id != "char2" {
 		t.Errorf("Failed to remove character from player, expected 1 character left, got %d", len(p.Characters))
 	}
 
@@ -49,9 +49,9 @@ func TestRemoveCharacter(t *testing.T) {
 
 func TestSetStatus(t *testing.T) {
 	p := Player{
-		PlayerID: "player1",
-		Name:     "John Doe",
-		Status:   Inactive,
+		Id:     "player1",
+		Name:   "John Doe",
+		Status: Inactive,
 	}
 	p.SetStatus(Active)
 	if p.Status != Active {

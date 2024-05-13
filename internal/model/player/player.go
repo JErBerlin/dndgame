@@ -17,7 +17,7 @@ const (
 
 // Player represents a player in the game.
 type Player struct {
-	PlayerID   string
+	Id         string
 	Name       string
 	Status     PlayerStatus
 	Characters []character.Character
@@ -29,9 +29,9 @@ func (p *Player) AddCharacter(c character.Character) {
 }
 
 // RemoveCharacter removes a character from the player's list by ID.
-func (p *Player) RemoveCharacter(characterID string) error {
+func (p *Player) RemoveCharacter(characterId string) error {
 	for i, char := range p.Characters {
-		if char.CharacterID == characterID {
+		if char.Id == characterId {
 			p.Characters = append(p.Characters[:i], p.Characters[i+1:]...)
 			return nil
 		}

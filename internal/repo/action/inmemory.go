@@ -25,37 +25,37 @@ func NewInMemoryActionRepository() *InMemoryActionRepository {
 func (r *InMemoryActionRepository) CreateAction(a *action.Action) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.actions[a.ActionID]; exists {
+	if _, exists := r.actions[a.ActionId]; exists {
 		return errors.New("action already exists")
 	}
-	r.actions[a.ActionID] = a
+	r.actions[a.ActionId] = a
 	return nil
 }
 
 func (r *InMemoryActionRepository) UpdateAction(a *action.Action) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.actions[a.ActionID]; !exists {
+	if _, exists := r.actions[a.ActionId]; !exists {
 		return errors.New("action not found")
 	}
-	r.actions[a.ActionID] = a
+	r.actions[a.ActionId] = a
 	return nil
 }
 
-func (r *InMemoryActionRepository) DeleteAction(actionID string) error {
+func (r *InMemoryActionRepository) DeleteAction(actionId string) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.actions[actionID]; !exists {
+	if _, exists := r.actions[actionId]; !exists {
 		return errors.New("action not found")
 	}
-	delete(r.actions, actionID)
+	delete(r.actions, actionId)
 	return nil
 }
 
-func (r *InMemoryActionRepository) GetActionByID(actionID string) (*action.Action, error) {
+func (r *InMemoryActionRepository) GetActionByID(actionId string) (*action.Action, error) {
 	r.mutex.RLock()
 	defer r.mutex.RUnlock()
-	if a, exists := r.actions[actionID]; exists {
+	if a, exists := r.actions[actionId]; exists {
 		return a, nil
 	}
 	return nil, errors.New("action not found")
@@ -64,20 +64,20 @@ func (r *InMemoryActionRepository) GetActionByID(actionID string) (*action.Actio
 func (r *InMemoryActionRepository) CreateActionInstance(ai *action.ActionInstance) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.actionInstances[ai.CharacterID]; exists {
+	if _, exists := r.actionInstances[ai.CharacterId]; exists {
 		return errors.New("action instance already exists")
 	}
-	r.actionInstances[ai.CharacterID] = ai
+	r.actionInstances[ai.CharacterId] = ai
 	return nil
 }
 
 func (r *InMemoryActionRepository) UpdateActionInstance(ai *action.ActionInstance) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.actionInstances[ai.CharacterID]; !exists {
+	if _, exists := r.actionInstances[ai.CharacterId]; !exists {
 		return errors.New("action instance not found")
 	}
-	r.actionInstances[ai.CharacterID] = ai
+	r.actionInstances[ai.CharacterId] = ai
 	return nil
 }
 
@@ -110,4 +110,16 @@ func (r *InMemoryActionRepository) ListActionInstances() ([]*action.ActionInstan
 		allInstances = append(allInstances, instance)
 	}
 	return allInstances, nil
+}
+
+func (r *InMemoryActionRepository) ListReadyActionsByCharacter(characterId string) ([]*action.ActionInstance, error) {
+    r.mutex.RLock()
+    defer r.mutex.RUnlock()
+    var readyActions []*action.ActionInstance
+    for _, instance := range r.actionInstances {
+        if instance.CharacterId == characterId && instance.Approved && !instance.Performed {
+            readyActions = append(readyActions, instance)
+        }
+    }
+    return readyActions, nil
 }

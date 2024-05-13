@@ -21,37 +21,37 @@ func NewInMemoryGameRepository() *InMemoryGameRepository {
 func (r *InMemoryGameRepository) CreateGame(g *game.Game) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.games[g.GameID]; exists {
+	if _, exists := r.games[g.Id]; exists {
 		return errors.New("game already exists")
 	}
-	r.games[g.GameID] = g
+	r.games[g.Id] = g
 	return nil
 }
 
-func (r *InMemoryGameRepository) UpdateGame(gameID string, g *game.Game) error {
+func (r *InMemoryGameRepository) UpdateGame(gameId string, g *game.Game) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.games[gameID]; !exists {
+	if _, exists := r.games[gameId]; !exists {
 		return errors.New("game not found")
 	}
-	r.games[gameID] = g
+	r.games[gameId] = g
 	return nil
 }
 
-func (r *InMemoryGameRepository) DeleteGame(gameID string) error {
+func (r *InMemoryGameRepository) DeleteGame(gameId string) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.games[gameID]; !exists {
+	if _, exists := r.games[gameId]; !exists {
 		return errors.New("game not found")
 	}
-	delete(r.games, gameID)
+	delete(r.games, gameId)
 	return nil
 }
 
-func (r *InMemoryGameRepository) GetGameByID(gameID string) (*game.Game, error) {
+func (r *InMemoryGameRepository) GetGameById(gameId string) (*game.Game, error) {
 	r.mutex.RLock()
 	defer r.mutex.RUnlock()
-	if game, exists := r.games[gameID]; exists {
+	if game, exists := r.games[gameId]; exists {
 		return game, nil
 	}
 	return nil, errors.New("game not found")

@@ -8,7 +8,8 @@ import (
 
 func TestNewCharacter(t *testing.T) {
 	attrs := Attributes{Strength: 10, Dexterity: 12, Constitution: 14, Intelligence: 18, Wisdom: 13, Charisma: 11}
-	char := NewCharacter("char1", "Zanaphia Starfire", Wizard, Human, "A brilliant scholar", attrs)
+	xp := 10
+	char := NewCharacter("char1", "Zanaphia Starfire", Wizard, Human, "A brilliant scholar", attrs, xp)
 
 	if char.Name != "Zanaphia Starfire" || char.Class != Wizard || char.Race != Human || char.Status != Active {
 		t.Errorf("NewCharacter failed to correctly initialize, got: %+v", char)
@@ -16,8 +17,8 @@ func TestNewCharacter(t *testing.T) {
 }
 
 func TestChooseAction(t *testing.T) {
-	char := NewCharacter("char1", "Zanaphia Starfire", Wizard, Human, "A brilliant scholar", Attributes{})
-	act := action.Action{ActionID: "act1", Name: "Firebolt", BaseXPCost: 5}
+	char := NewCharacter("char1", "Zanaphia Starfire", Wizard, Human, "A brilliant scholar", Attributes{}, 100)
+	act := action.Action{ActionId: "act1", Name: "Firebolt", BaseXPCost: 5}
 	char.ChooseAction(act, 10)
 
 	if len(char.ActionInstances) != 1 || char.ActionInstances[0].CustomXPCost != 10 {
@@ -26,7 +27,7 @@ func TestChooseAction(t *testing.T) {
 }
 
 func TestSetStatus(t *testing.T) {
-	char := NewCharacter("char1", "Zanaphia Starfire", Wizard, Human, "A brilliant scholar", Attributes{})
+	char := NewCharacter("char1", "Zanaphia Starfire", Wizard, Human, "A brilliant scholar", Attributes{}, 100)
 	char.SetStatus(Inactive)
 	if char.Status != Inactive {
 		t.Errorf("SetStatus failed to update character status, expected Inactive, got: %v", char.Status)
@@ -34,7 +35,7 @@ func TestSetStatus(t *testing.T) {
 }
 
 func TestUpdateAttributes(t *testing.T) {
-	char := NewCharacter("char1", "Zanaphia Starfire", Wizard, Human, "A brilliant scholar", Attributes{Strength: 10})
+	char := NewCharacter("char1", "Zanaphia Starfire", Wizard, Human, "A brilliant scholar", Attributes{Strength: 10}, 100)
 	newAttrs := Attributes{Strength: 15}
 	char.UpdateAttributes(newAttrs)
 

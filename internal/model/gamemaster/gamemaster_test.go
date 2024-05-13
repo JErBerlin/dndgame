@@ -7,11 +7,11 @@ import (
 )
 
 func TestApproveAction(t *testing.T) {
-	gm := GameMaster{GMID: "GM1", Name: "Anakin", Status: Active}
+	gm := GameMaster{ID: "GM1", Name: "Anakin", Status: Active}
 	actionInstances := make(map[string]*action.ActionInstance)
 	actionInstance := &action.ActionInstance{
-		Action:       action.Action{ActionID: "act1", Name: "Firebolt", BaseXPCost: 10},
-		CharacterID:  "char1",
+		Action:       action.Action{ActionId: "act1", Name: "Firebolt", BaseXPCost: 10},
+		CharacterId:  "char1",
 		CustomXPCost: 15,
 		Approved:     false,
 	}

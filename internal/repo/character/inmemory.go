@@ -4,8 +4,12 @@ import (
 	"errors"
 	"sync"
 
+	"github.com/google/uuid"
 	"github.com/jerberlin/dndgame/internal/model/character"
 )
+
+// Check implementation
+var _ CharacterRepository = &InMemoryCharacterRepository{}
 
 type InMemoryCharacterRepository struct {
 	characters map[string]*character.Character
@@ -18,27 +22,33 @@ func NewInMemoryCharacterRepository() *InMemoryCharacterRepository {
 	}
 }
 
-func (r *InMemoryCharacterRepository) CreateCharacter(c *character.Character) error {
-	r.mutex.Lock()
-	defer r.mutex.Unlock()
-	if _, exists := r.characters[c.Id]; exists {
-		return errors.New("character already exists")
-	}
-	r.characters[c.Id] = c
-	return nil
+func (r *InMemoryCharacterRepository) CreateCharacter(c character.Character) error {
+    r.mutex.Lock()
+    defer r.mutex.Unlock()
+    if c.Id == "" {
+        c.Id = uuid.New().String()  // Automatically generate a UUID if not provided
+    } else if _, exists := r.characters[c.Id]; exists {
+        return errors.New("character already exists")
+    }
+    r.characters[c.Id] = &c
+	
+    return nil
 }
 
-func (r *InMemoryCharacterRepository) UpdateCharacter(c *character.Character) error {
+func (r *InMemoryCharacterRepository) UpdateCharacter(c character.Character) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	if existingChar, exists := r.characters[c.Id]; !exists {
 		return errors.New("character not found")
 	} else {
-		// Update the character's attributes and XP.
+		// Update
+		existingChar.Name = c.Name
+		existingChar.Class = c.Class
+		existingChar.Race = c.Race
+		existingChar.Description = c.Description
 		existingChar.Attributes = c.Attributes
 		existingChar.XP = c.XP
-		existingChar.Status = c.Status // TODO: full overwrite?
-		existingChar.ActionInstances = c.ActionInstances // TODO: full overwrite?
+		existingChar.Status = c.Status
 	}
 	return nil
 }

@@ -4,23 +4,30 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/jerberlin/dndgame/internal/model/player"
+	"github.com/google/uuid"
+	model "github.com/jerberlin/dndgame/internal/model/player"
 )
 
+// Check implementation
+var _ PlayerRepository = &InMemoryPlayerRepository{}
+
 type InMemoryPlayerRepository struct {
-	players map[string]*player.Player
+	players map[string]*model.Player
 	mutex   sync.RWMutex
 }
 
 func NewInMemoryPlayerRepository() *InMemoryPlayerRepository {
 	return &InMemoryPlayerRepository{
-		players: make(map[string]*player.Player),
+		players: make(map[string]*model.Player),
 	}
 }
 
-func (r *InMemoryPlayerRepository) CreatePlayer(p player.Player) error {
+func (r *InMemoryPlayerRepository) CreatePlayer(p model.Player) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
+	if p.Id == "" {
+		p.Id = uuid.New().String() // Automatically generate a UUID if not provided
+	}
 	if _, exists := r.players[p.Id]; exists {
 		return errors.New("player already exists")
 	}
@@ -28,7 +35,7 @@ func (r *InMemoryPlayerRepository) CreatePlayer(p player.Player) error {
 	return nil
 }
 
-func (r *InMemoryPlayerRepository) UpdatePlayer(playerId string, p player.Player) error {
+func (r *InMemoryPlayerRepository) UpdatePlayer(playerId string, p model.Player) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 	if _, exists := r.players[playerId]; !exists {
@@ -48,7 +55,7 @@ func (r *InMemoryPlayerRepository) DeletePlayer(playerId string) error {
 	return nil
 }
 
-func (r *InMemoryPlayerRepository) GetPlayerById(playerId string) (*player.Player, error) {
+func (r *InMemoryPlayerRepository) GetPlayerById(playerId string) (*model.Player, error) {
 	r.mutex.RLock()
 	defer r.mutex.RUnlock()
 	if player, exists := r.players[playerId]; exists {
@@ -57,13 +64,12 @@ func (r *InMemoryPlayerRepository) GetPlayerById(playerId string) (*player.Playe
 	return nil, errors.New("player not found")
 }
 
-// ListPlayers retrieves all players stored in the repository.
-func (r *InMemoryPlayerRepository) ListPlayers() ([]player.Player, error) {
+func (r *InMemoryPlayerRepository) ListPlayers() ([]*model.Player, error) {
 	r.mutex.RLock()
 	defer r.mutex.RUnlock()
-	allPlayers := make([]player.Player, 0, len(r.players))
+	allPlayers := make([]*model.Player, 0, len(r.players))
 	for _, p := range r.players {
-		allPlayers = append(allPlayers, *p)
+		allPlayers = append(allPlayers, p)
 	}
 	return allPlayers, nil
 }

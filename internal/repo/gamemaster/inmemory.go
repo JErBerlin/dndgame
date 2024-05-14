@@ -1,11 +1,10 @@
-// internal/repo/gamemaster/inmemorygamemasterrepository.go
-
 package gamemaster
 
 import (
 	"errors"
 	"sync"
 
+	"github.com/google/uuid"
 	model "github.com/jerberlin/dndgame/internal/model/gamemaster"
 )
 
@@ -29,23 +28,26 @@ func (r *InMemoryGameMasterRepository) GetGameMaster(id string) (*model.GameMast
 	return nil, errors.New("game master not found")
 }
 
-func (r *InMemoryGameMasterRepository) UpdateGameMaster(gm *model.GameMaster) error {
+func (r *InMemoryGameMasterRepository) UpdateGameMaster(gm model.GameMaster) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.masters[gm.ID]; exists {
-		r.masters[gm.ID] = gm
-		return nil
+	if _, exists := r.masters[gm.Id]; !exists {
+		return errors.New("game master not found")
 	}
-	return errors.New("game master not found")
+	r.masters[gm.Id] = &gm
+	return nil
 }
 
-func (r *InMemoryGameMasterRepository) CreateGameMaster(gm *model.GameMaster) error {
+func (r *InMemoryGameMasterRepository) CreateGameMaster(gm model.GameMaster) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	if _, exists := r.masters[gm.ID]; exists {
+	if gm.Id == "" {
+		gm.Id = uuid.New().String() // Automatically generate a UUID if not provided
+	}
+	if _, exists := r.masters[gm.Id]; exists {
 		return errors.New("game master already exists")
 	}
-	r.masters[gm.ID] = gm
+	r.masters[gm.Id] = &gm
 	return nil
 }
 

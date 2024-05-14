@@ -2,33 +2,27 @@ package gamemaster
 
 import (
 	"testing"
-
-	"github.com/jerberlin/dndgame/internal/model/action"
 )
 
-func TestApproveAction(t *testing.T) {
-	gm := GameMaster{ID: "GM1", Name: "Anakin", Status: Active}
-	actionInstances := make(map[string]*action.ActionInstance)
-	actionInstance := &action.ActionInstance{
-		Action:       action.Action{ActionId: "act1", Name: "Firebolt", BaseXPCost: 10},
-		CharacterId:  "char1",
-		CustomXPCost: 15,
-		Approved:     false,
-	}
-	actionInstances["act1"] = actionInstance
+func TestSetStatus(t *testing.T) {
+	gm := NewGameMaster("gm1", "Game Master One", Inactive, "game123")
 
-	// Test successful approval
-	err := gm.ApproveAction(actionInstances, "act1")
-	if err != nil {
-		t.Errorf("ApproveAction failed unexpectedly: %v", err)
-	}
-	if !actionInstance.Approved {
-		t.Error("ApproveAction failed to approve the action")
-	}
+	// Change the status of the game master.
+	gm.SetStatus(Active)
 
-	// Test failure to find action instance
-	err = gm.ApproveAction(actionInstances, "nonexistent")
-	if err == nil {
-		t.Error("ApproveAction did not fail as expected when action instance is not found")
+	if gm.Status != Active {
+		t.Errorf("SetStatus failed: expected %v, got %v", Active, gm.Status)
+	}
+}
+
+func TestSetGameId(t *testing.T) {
+	gm := NewGameMaster("gm1", "Game Master One", Active, "game123")
+
+	// Change the game ID of the game master.
+	newGameId := "game456"
+	gm.SetGameId(newGameId)
+
+	if gm.GameId != newGameId {
+		t.Errorf("SetGameId failed: expected %s, got %s", newGameId, gm.GameId)
 	}
 }

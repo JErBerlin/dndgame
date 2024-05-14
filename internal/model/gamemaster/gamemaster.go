@@ -1,12 +1,6 @@
 // Package game_master presents the game master agent responsible for directing the game.
 package gamemaster
 
-import (
-	"errors"
-
-	"github.com/jerberlin/dndgame/internal/model/action"
-)
-
 // GameMasterStatus defines possible states of a game master.
 type GameMasterStatus int
 
@@ -17,22 +11,28 @@ const (
 
 // GameMaster represents the game master directing the game.
 type GameMaster struct {
-	ID     string
+	Id     string
 	Name   string
 	Status GameMasterStatus
+	GameId string // Foreign key to Game
 }
 
-// ApproveAction finds an action instance by ID and sets its Approved status to true. Returns an error if not found.
-// TODO: decouple action instances from approve action function, f.ex. injecting the action manager service or with event-driven aproval.
-func (gm *GameMaster) ApproveAction(instances map[string]*action.ActionInstance, instanceID string) error {
-	if ai, exists := instances[instanceID]; exists {
-		ai.Approved = true
-		return nil
+// NewGameMaster creates a new game master with provided details.
+func NewGameMaster(id, name string, status GameMasterStatus, gameId string) *GameMaster {
+	return &GameMaster{
+		Id:     id,
+		Name:   name,
+		Status: status,
+		GameId: gameId,
 	}
-	return errors.New("action instance not found")
 }
 
 // SetStatus changes the status of the game master.
 func (gm *GameMaster) SetStatus(newStatus GameMasterStatus) {
 	gm.Status = newStatus
+}
+
+// SetStatus changes the game id of the game master.
+func (gm *GameMaster) SetGameId(newGameId string) {
+	gm.GameId = newGameId
 }

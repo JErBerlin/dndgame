@@ -1,4 +1,4 @@
-// Package game manage the overall game state and interactions within the game
+// Package game (model) manage the overall game state and interactions.
 package game
 
 import (
@@ -30,7 +30,7 @@ const (
 )
 
 func (a Adventure) TypeString() string {
-	adventureNames := [...]string{"DungeonCrawls","Quests","Campaigns"}
+	adventureNames := [...]string{"DungeonCrawls", "Quests", "Campaigns"}
 	return adventureNames[a.Type]
 }
 

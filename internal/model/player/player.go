@@ -1,11 +1,5 @@
-// Package player manages the player entities withing the game.
+// Package player (model) manages the player entities.
 package player
-
-import (
-	"fmt"
-
-	"github.com/jerberlin/dndgame/internal/model/character"
-)
 
 // PlayerStatus defines possible states of a player using an enumeration.
 type PlayerStatus int
@@ -15,28 +9,22 @@ const (
 	Active                       // after activation
 )
 
-// Player represents a player in the game.
+// Player represents a player in the game, linked directly to a specific game via a foreign key.
 type Player struct {
-	Id         string
-	Name       string
-	Status     PlayerStatus
-	Characters []character.Character
+	Id     string       `json:"id"`
+	Name   string       `json:"name"`
+	Status PlayerStatus `json:"status"`
+	GameId string       `json:"game_id"` // Foreign key to Game
 }
 
-// AddCharacter adds a new character to the player's list.
-func (p *Player) AddCharacter(c character.Character) {
-	p.Characters = append(p.Characters, c)
-}
-
-// RemoveCharacter removes a character from the player's list by ID.
-func (p *Player) RemoveCharacter(characterId string) error {
-	for i, char := range p.Characters {
-		if char.Id == characterId {
-			p.Characters = append(p.Characters[:i], p.Characters[i+1:]...)
-			return nil
-		}
+// NewPlayer creates a new player with the given details.
+func NewPlayer(id, name, gameId string) *Player {
+	return &Player{
+		Id:     id,
+		Name:   name,
+		Status: Active, // Default to active when created
+		GameId: gameId,
 	}
-	return fmt.Errorf("character not found")
 }
 
 // SetStatus changes the status of the player.

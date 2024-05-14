@@ -1,8 +1,6 @@
 // Package character manages player and non-player characters within the game.
 package character
 
-import "github.com/jerberlin/dndgame/internal/model/action"
-
 // CharacterClass defines common classes a character may belong to.
 type CharacterClass int
 
@@ -45,38 +43,33 @@ const (
 
 // Character represents both player-controlled and non-player characters in the game.
 type Character struct {
-	Id              string
-	Name            string
-	Class           CharacterClass
-	Race            CharacterRace
-	Description     string
-	Attributes      Attributes
-	XP              int
-	Status          CharacterStatus
-	ActionInstances []action.ActionInstance
+	Id          string
+	Name        string
+	Class       CharacterClass
+	Race        CharacterRace
+	Description string
+	Attributes  Attributes
+	XP          int
+	Status      CharacterStatus
+	GameId      string  // Foreign key to Game
+	PlayerId    string  // Foreign key to Player
 }
 
 // NewCharacter creates a new character with specified attributes and characteristics.
-func NewCharacter(id, name string, class CharacterClass, race CharacterRace, desc string, attrs Attributes, xp int) *Character {
+func NewCharacter(id, name string, class CharacterClass, race CharacterRace, desc string, attrs Attributes, xp int, gameId, playerId string) *Character {
 	return &Character{
-		Id:              id,
-		Name:            name,
-		Class:           class,
-		Race:            race,
-		Description:     desc,
-		Attributes:      attrs,
-		XP:              xp, 
-		Status:          Active, // default, can be changed as needed
-		ActionInstances: []action.ActionInstance{},
+		Id:          id,
+		Name:        name,
+		Class:       class,
+		Race:        race,
+		Description: desc,
+		Attributes:  attrs,
+		XP:          xp,
+		Status:      Active, // default, can be changed as needed
+		GameId:      gameId,
+		PlayerId:    playerId,
 	}
-}
-
-// ChooseAction makes the choice to perform an action by a character. The action needs approval to be effectively executed.
-func (c *Character) ChooseAction(act action.Action, customXPCost int) {
-	actionInstance := act.CreateInstance(c.Id, customXPCost)
-	c.ActionInstances = append(c.ActionInstances, actionInstance)
-	// TODO Optional: Notify game master for approval
-}
+} 
 
 // SetStatus changes the status of the character.
 func (c *Character) SetStatus(newStatus CharacterStatus) {

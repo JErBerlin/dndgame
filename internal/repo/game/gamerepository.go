@@ -1,8 +1,9 @@
 // internal/repo/game/gamerepository.go
 package game
 
-import model "github.com/jerberlin/dndgame/internal/model/game"
-
+import (
+	model "github.com/jerberlin/dndgame/internal/model/game"
+)
 // GameRepository defines the interface for game data operations.
 type GameRepository interface {
 	CreateGame(game model.Game) error

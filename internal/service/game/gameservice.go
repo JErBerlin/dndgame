@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/jerberlin/dndgame/internal/model/game"
+	model "github.com/jerberlin/dndgame/internal/model/game"
 	repoGame "github.com/jerberlin/dndgame/internal/repo/game"
 	repoPlayer "github.com/jerberlin/dndgame/internal/repo/player"
 )
@@ -13,11 +13,11 @@ import (
 type GameService interface {
 	StartGame(gameId string, name string) error
 	EndGame(gameId string) error
-	SetGameStatus(gameId string, status game.GameStatus) error
+	SetGameStatus(gameId string, status model.GameStatus) error
 	AddPlayerToGame(gameId string, playerId string) error
 	RemovePlayerFromGame(gameId string, playerId string) error
-	SetAdventure(gameId string, adventure game.Adventure) error
-	AddMissionToGame(gameId string, mission game.Mission) error
+	SetAdventure(gameId string, adventure model.Adventure) error
+	AddMissionToGame(gameId string, mission model.Mission) error
 }
 
 type service struct {
@@ -29,26 +29,29 @@ type service struct {
 var _ GameService = &service{}
 
 // NewGameService creates a new instance of GameService.
-func NewGameService(gr repoGame.GameRepository) GameService {
+func NewGameService(gameRepo repoGame.GameRepository, playerRepo repoPlayer.PlayerRepository) GameService {
 	return &service{
-		gameRepo: gr,
+		gameRepo:   gameRepo,
+		playerRepo: playerRepo,
 	}
 }
 
-// StartGame starts a new game session.
-// The precondition is that no game with the given Id exists, since the game will be created at start.
+// StartGame initializes a new game session with a unique gameId and name.
+// This is the primary action required before adding a Game Master, players, or setting an adventure and mission.
+// It ensures that the game exists with a basic configuration that can be built upon.
+// TODO: Consider modifying this function to allow starting the game after all configurations (e.g., players, GM, adventure) have been set up.
 func (s *service) StartGame(gameId string, name string) error {
 	_, err := s.gameRepo.GetGameById(gameId)
 	if err == nil {
 		return errors.New("game already exists")
 	}
 
-	gameOpts := &game.GameOptions{
+	gameOpts := &model.GameOptions{
 		StartTime: time.Now(),
-		Status:    game.Active,
+		Status:    model.Active,
 	}
 
-	g := game.NewGame(gameId, name, gameOpts)
+	g := model.NewGame(gameId, name, gameOpts)
 
 	return s.gameRepo.CreateGame(g)
 }
@@ -57,19 +60,19 @@ func (s *service) StartGame(gameId string, name string) error {
 func (s *service) EndGame(gameId string) error {
 	g, err := s.gameRepo.GetGameById(gameId)
 	if err != nil {
-		return errors.New("game not found")
+		return err
 	}
+	g.Status = model.Inactive
 	g.EndTime = time.Now()
-	g.Status = game.Inactive
 
 	return s.gameRepo.UpdateGame(gameId, g)
 }
 
 // SetGameStatus updates the game's status.
-func (s *service) SetGameStatus(gameId string, status game.GameStatus) error {
+func (s *service) SetGameStatus(gameId string, status model.GameStatus) error {
 	g, err := s.gameRepo.GetGameById(gameId)
 	if err != nil {
-		return errors.New("game not found")
+		return err
 	}
 	g.Status = status
 
@@ -77,52 +80,98 @@ func (s *service) SetGameStatus(gameId string, status game.GameStatus) error {
 }
 
 // AddPlayerToGame adds a player to a game.
+// Obs: a player can only be in one game for now.
 func (s *service) AddPlayerToGame(gameId string, playerId string) error {
-	g, err := s.gameRepo.GetGameById(gameId)
-	if err != nil {
-		return errors.New("game not found")
-	}
-	p, err := s.playerRepo.GetPlayerById(playerId)
-	if err != nil {
-		return err // Player does not exist or other errors
-	}
-	g.AddPlayer(*p)
-	return s.gameRepo.UpdateGame(gameId, g)
-}
-
-// RemovePlayerFromGame removes a player from a game.
-func (s *service) RemovePlayerFromGame(gameId string, playerId string) error {
-	g, err := s.gameRepo.GetGameById(gameId)
-	if err != nil {
-		return errors.New("game not found")
-	}
-
-	err = g.RemovePlayer(playerId)
+	// Check that the id is correct
+	_, err := s.gameRepo.GetGameById(gameId)
 	if err != nil {
 		return err
 	}
 
-	return s.gameRepo.UpdateGame(gameId, g)
+	p, err := s.playerRepo.GetPlayerById(playerId)
+	if err != nil {
+		return err
+	}
+
+	// Check if the player is already associated with another game
+	// A player can only be in one game for now
+	if p.GameId != "" && p.GameId != gameId {
+		return errors.New("player is already associated with a different game")
+	}
+
+	// Associate the player with the game
+	p.GameId = gameId // Link player to game
+	err = s.playerRepo.UpdatePlayer(playerId, *p) // Update the player's game association
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-// SetAdventure sets the adventure for a specific game.
-func (s *service) SetAdventure(gameId string, adventure game.Adventure) error {
+// RemovePlayerFromGame dissociates a player from a game.
+func (s *service) RemovePlayerFromGame(gameId string, playerId string) error {
+	// First, retrieve the player to check their current game association.
+	p, err := s.playerRepo.GetPlayerById(playerId)
+	if err != nil {
+		return err // Return if player does not exist or other errors.
+	}
+
+	// Check if the player is currently associated with the game in question.
+	if p.GameId != gameId {
+		return errors.New("player is not playing this game")
+	}
+
+	// Dissociate the player from the game.
+	p.GameId = "" // Remove the game association.
+
+	// Update the player repository to reflect this change.
+	err = s.playerRepo.UpdatePlayer(playerId, *p)
+	if err != nil {
+		return err // TODO: Handle any errors that occur during update.
+	}
+
+	return nil
+}
+
+
+// SetAdventure sets the adventure for a specific game by ensuring the adventure exists or creating it if not.
+func (s *service) SetAdventure(gameId string, adventure model.Adventure) error {
 	g, err := s.gameRepo.GetGameById(gameId)
 	if err != nil {
-		return errors.New("game not found")
+		return err // Handle error if game not found.
 	}
-	g.SetAdventure(adventure)
+
+	// Assuming a method to handle the existence check or creation of an adventure.
+	_, err := s.gameRepo.GetAdventureById(adventure.Id)
+	if err != nil {
+		return err // Handle error if the adventure could not be ensured.
+	}
+
+	// Set the AdventureId of the game to the ensured adventure's ID.
+	g.AdventureId = adventure.Id
 
 	return s.gameRepo.UpdateGame(gameId, g)
 }
 
-// AddMissionToGame adds a mission to the current adventure in the game.
-func (s *service) AddMissionToGame(gameId string, mission game.Mission) error {
+// AddMissionToGame sets a mission to the current adventure in the game.
+func (s *service) AddMissionToGame(gameId string, mission model.Mission) error {
 	g, err := s.gameRepo.GetGameById(gameId)
 	if err != nil {
-		return errors.New("game not found")
+		return err // Handle error if game not found.
 	}
-	g.AddMission(mission)
 
-	return s.gameRepo.UpdateGame(gameId, g)
+	if g.AdventureId == "" {
+		return errors.New("no adventure set for this game")
+	}
+
+	// Assuming a method to handle the creation of a mission linked to an adventure.
+	missionId, err := s.gameRepo.AddMissionToAdventure(g.AdventureId, mission)
+	if err != nil {
+		return err // Handle error if the mission could not be added.
+	}
+
+	// Optionally update the Adventure's MissionId if needed (not always necessary).
+	return nil
 }
+
